@@ -11,7 +11,7 @@ Part of the **[Cognis Neural Suite](https://github.com/cognis-digital)** — 370
 ## Build / run
 
 ```bash
-cobc -x -o fixwval fixwval.cob
+cobc -x -free -o fixwval fixwval.cob
 ./fixwval records.dat 5 4
 ```
 

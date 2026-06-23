@@ -1,4 +1,3 @@
->>SOURCE FORMAT FREE
 *> fixwval — fixed-width record validator (COBOL / GnuCOBOL)
 *> Part of the Cognis Neural Suite. Single-purpose, JSON-out, CI-tested.
 *>
