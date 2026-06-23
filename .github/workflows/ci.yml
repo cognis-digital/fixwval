@@ -1,0 +1,20 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: install GnuCOBOL
+        run: sudo apt-get update && sudo apt-get install -y gnucobol
+      - name: compile
+        run: cobc -x -o fixwval fixwval.cob
+      - name: run on sample (field col 5 len 4; 1 bad record, exit 2)
+        run: |
+          set +e
+          out=$(./fixwval sample.dat 5 4); code=$?
+          echo "$out"; echo "exit=$code"
+          echo "$out" | grep -q '"tool":"fixwval"' || exit 1
+          echo "$out" | grep -q '"records":3' || { echo "wrong record count"; exit 1; }
+          echo "$out" | grep -q '"bad":1' || { echo "wrong bad count"; exit 1; }
+          [ "$code" = "2" ] || { echo "expected exit 2"; exit 1; }
