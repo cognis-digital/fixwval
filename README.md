@@ -8,6 +8,33 @@
 
 Part of the **[Cognis Neural Suite](https://github.com/cognis-digital)** — 370+ single-purpose, self-hostable tools. Like every tool in the suite, `fixwval` is single-purpose, emits machine-readable JSON, and exits non-zero when it finds something (CI-friendly).
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+**Sample result format** _(illustrative values — run on your own data for real findings):_
+
+```
+{
+  "issues": [
+    {
+      "id": "1234",
+      "title": "Error: invalid input",
+      "description": "Input value is not a valid integer.",
+      "severity": "error"
+    },
+    {
+      "id": "5678",
+      "title": "Warning: deprecated function",
+      "description": "Function 'old_function' is deprecated and will be removed in the next release.",
+      "severity": "warning"
+    }
+  ]
+}
+```
+
+<!-- cognis:example:end -->
+
 ## Build / run
 
 ```bash
