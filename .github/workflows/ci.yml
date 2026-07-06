@@ -5,16 +5,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: install GnuCOBOL
         run: sudo apt-get update && sudo apt-get install -y gnucobol
-      - name: compile
-        run: cobc -x -free -o fixwval fixwval.cob
-      - name: run on sample (field col 5 len 4; 1 bad record, exit 2)
+
+      - name: compile (cobc -x -free, warnings as errors are OFF but printed)
+        run: |
+          cobc --version | head -1
+          cobc -x -free -Wall -o fixwval fixwval.cob
+          cobc -x -free -Wall -o fwmode  fwmode.cob
+
+      - name: run test harness (29 assertions, must be green)
+        run: bash tests/run.sh
+
+      - name: run demos (must exit 0)
+        run: bash demos/run_all.sh
+
+      - name: smoke — clean session passes (exit 0)
         run: |
           set +e
-          out=$(./fixwval sample.dat 5 4); code=$?
-          echo "$out"; echo "exit=$code"
-          echo "$out" | grep -q '"tool":"fixwval"' || exit 1
-          echo "$out" | grep -q '"records":3' || { echo "wrong record count"; exit 1; }
-          echo "$out" | grep -q '"bad":1' || { echo "wrong bad count"; exit 1; }
-          [ "$code" = "2" ] || { echo "expected exit 2"; exit 1; }
+          ./fixwval demos/session_clean.fix >/dev/null; code=$?
+          [ "$code" = "0" ] || { echo "expected exit 0, got $code"; exit 1; }
+
+      - name: smoke — broken session fails (exit 2) with expected violations
+        run: |
+          set +e
+          out=$(./fixwval demos/session_broken.fix); code=$?
+          echo "$out"
+          [ "$code" = "2" ] || { echo "expected exit 2, got $code"; exit 1; }
+          echo "$out" | grep -q 'BAD_CHECKSUM'    || { echo "no BAD_CHECKSUM"; exit 1; }
+          echo "$out" | grep -q 'MISSING_REQUIRED' || { echo "no MISSING_REQUIRED"; exit 1; }
+          echo "$out" | grep -q 'BAD_ENUM'         || { echo "no BAD_ENUM"; exit 1; }

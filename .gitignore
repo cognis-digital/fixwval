@@ -3,3 +3,11 @@ bin/
 *.o
 a.out
 *.bin
+# built executables
+/fixwval
+/fwmode
+/fixwval.exe
+/fwmode.exe
+# scratch
+_probe.sh
+_probe_out.txt
