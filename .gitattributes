@@ -1,0 +1,6 @@
+# Keep shell scripts and fixtures LF so they run in CI (ubuntu) regardless of
+# the checkout platform.
+*.sh    text eol=lf
+*.fix   text eol=lf
+*.dat   text eol=lf
+*.cob   text eol=lf
